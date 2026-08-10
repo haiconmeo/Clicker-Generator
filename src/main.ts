@@ -53,6 +53,7 @@ const store = createStore<UiState>({
   status: 'Loading switch assets…',
   building: false,
   hasParts: false,
+  exportFileName: 'clicker',
   colorCount: 4,
   palette: [],
   baseShape: 'outline',
@@ -280,7 +281,10 @@ const ui = createUi(sidebarLeft, sidebarRight, statusEl, {
   onSection: (axis, pos) => viewer.setSection(axis, pos),
   onExport: () => {
     if (!latestParts.length) return;
-    downloadThreeMF(latestParts, 'clicker.3mf');
+    downloadThreeMF(latestParts, normalizeExportFileName(store.get().exportFileName));
+  },
+  onExportFileName: (name) => {
+    store.set({ exportFileName: name });
   },
   onRenderPng: async () => {
     const blob = await viewer.renderToPng();
@@ -1045,6 +1049,12 @@ function rgbToHex(rgb: RGB): string {
 }
 function firstLine(s: string): string {
   return s.split('\n')[0];
+}
+
+function normalizeExportFileName(name: string): string {
+  const cleaned = name.trim().replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ');
+  const baseName = cleaned || 'clicker';
+  return baseName.toLowerCase().endsWith('.3mf') ? baseName : `${baseName}.3mf`;
 }
 
 // ---- Render / project save-load / AI prompt ----

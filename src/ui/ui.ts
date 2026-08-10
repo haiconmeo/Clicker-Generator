@@ -15,6 +15,7 @@ export interface UiState {
   status: string;
   building: boolean;
   hasParts: boolean;
+  exportFileName: string;
   colorCount: number;
   palette: PaletteEntry[];
   baseShape: BaseShapeKind;
@@ -103,6 +104,7 @@ export interface UiCallbacks {
   onShowSwitch(on: boolean): void;
   onSection(axis: SectionAxis, pos: number): void;
   onExport(): void;
+  onExportFileName(name: string): void;
   onRenderPng(): void;
   onAiPrompt(): void;
   onSaveProject(): void;
@@ -591,6 +593,10 @@ export function createUi(
     </div>
 
     <div class="sidebar-sticky-footer">
+      <div class="field" style="margin-bottom: 8px;">
+        <label for="exportFileName">File name</label>
+        <input id="exportFileName" type="text" autocomplete="off" spellcheck="false" />
+      </div>
       <button class="primary" id="export" style="width:100%;">Download 3MF</button>
       <div id="projectSettingsContainer">
         <div class="btn-row">
@@ -1157,6 +1163,9 @@ export function createUi(
 
   // --- Export and Utility actions ---
   $('export').addEventListener('click', () => cb.onExport());
+  $<HTMLInputElement>('exportFileName').addEventListener('input', (e) =>
+    cb.onExportFileName((e.target as HTMLInputElement).value),
+  );
   // render PNG and AI prompt buttons removed per design
   $('saveProj').addEventListener('click', () => cb.onSaveProject());
   const projFile = $<HTMLInputElement>('projFile');
@@ -1676,6 +1685,8 @@ export function createUi(
     setVal('topthickVal', state.topThickness.toFixed(1) + ' mm');
     imgdepth.value = String(state.imageDepth);
     setVal('imgdepthVal', state.imageDepth.toFixed(1) + ' mm');
+    const exportNameEl = $<HTMLInputElement>('exportFileName');
+    if (document.activeElement !== exportNameEl) exportNameEl.value = state.exportFileName;
     const modelScaleEl = $<HTMLInputElement>('modelScale');
     modelScaleEl.value = String(state.modelScale);
     setVal('modelScaleVal', Math.round(state.modelScale * 100) + '%');
