@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clicker Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon: black logo (dark ink) reads on light backgrounds; white logo on dark. -->
+    <link rel="icon" type="image/png" href="./assets/favicon/Vostokfaviconblack.png" />
+    <link rel="icon" type="image/png" href="./assets/favicon/vostokfaviconwhite.png" media="(prefers-color-scheme: dark)" />
+    <link rel="apple-touch-icon" href="./assets/favicon/Vostokfaviconblack.png" />
+    <script>
+      (function() {
+        const saved = localStorage.getItem('clicker_theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved || (systemDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="layout">
+      <aside id="sidebar-left" class="sidebar left"></aside>
+      <div id="viewport">
+        <div id="app"></div>
+        <div id="status">Booting…</div>
+      </div>
+      <aside id="sidebar-right" class="sidebar right"></aside>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
